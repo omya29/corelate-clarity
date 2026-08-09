@@ -11,8 +11,13 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AlertsRouteImport } from './routes/alerts'
+import { Route as AnalyticsRouteImport } from './routes/analytics'
 import { Route as CorrelationsRouteImport } from './routes/correlations'
 import { Route as InvestigationRouteImport } from './routes/investigation'
+import { Route as MitreRouteImport } from './routes/mitre'
+import { Route as ReportsRouteImport } from './routes/reports'
+import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as SystemStatusRouteImport } from './routes/system-status'
 import { Route as IncidentsIndexRouteImport } from './routes/incidents.index'
 import { Route as IncidentsIncidentIdRouteImport } from './routes/incidents.$incidentId'
 
@@ -26,6 +31,11 @@ const AlertsRoute = AlertsRouteImport.update({
   path: '/alerts',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AnalyticsRoute = AnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CorrelationsRoute = CorrelationsRouteImport.update({
   id: '/correlations',
   path: '/correlations',
@@ -34,6 +44,26 @@ const CorrelationsRoute = CorrelationsRouteImport.update({
 const InvestigationRoute = InvestigationRouteImport.update({
   id: '/investigation',
   path: '/investigation',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MitreRoute = MitreRouteImport.update({
+  id: '/mitre',
+  path: '/mitre',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReportsRoute = ReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SystemStatusRoute = SystemStatusRouteImport.update({
+  id: '/system-status',
+  path: '/system-status',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IncidentsIndexRoute = IncidentsIndexRouteImport.update({
@@ -50,16 +80,26 @@ const IncidentsIncidentIdRoute = IncidentsIncidentIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/alerts': typeof AlertsRoute
+  '/analytics': typeof AnalyticsRoute
   '/correlations': typeof CorrelationsRoute
   '/investigation': typeof InvestigationRoute
+  '/mitre': typeof MitreRoute
+  '/reports': typeof ReportsRoute
+  '/settings': typeof SettingsRoute
+  '/system-status': typeof SystemStatusRoute
   '/incidents/$incidentId': typeof IncidentsIncidentIdRoute
   '/incidents/': typeof IncidentsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/alerts': typeof AlertsRoute
+  '/analytics': typeof AnalyticsRoute
   '/correlations': typeof CorrelationsRoute
   '/investigation': typeof InvestigationRoute
+  '/mitre': typeof MitreRoute
+  '/reports': typeof ReportsRoute
+  '/settings': typeof SettingsRoute
+  '/system-status': typeof SystemStatusRoute
   '/incidents/$incidentId': typeof IncidentsIncidentIdRoute
   '/incidents': typeof IncidentsIndexRoute
 }
@@ -67,8 +107,13 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/alerts': typeof AlertsRoute
+  '/analytics': typeof AnalyticsRoute
   '/correlations': typeof CorrelationsRoute
   '/investigation': typeof InvestigationRoute
+  '/mitre': typeof MitreRoute
+  '/reports': typeof ReportsRoute
+  '/settings': typeof SettingsRoute
+  '/system-status': typeof SystemStatusRoute
   '/incidents/$incidentId': typeof IncidentsIncidentIdRoute
   '/incidents/': typeof IncidentsIndexRoute
 }
@@ -77,24 +122,39 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/alerts'
+    | '/analytics'
     | '/correlations'
     | '/investigation'
+    | '/mitre'
+    | '/reports'
+    | '/settings'
+    | '/system-status'
     | '/incidents/$incidentId'
     | '/incidents/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/alerts'
+    | '/analytics'
     | '/correlations'
     | '/investigation'
+    | '/mitre'
+    | '/reports'
+    | '/settings'
+    | '/system-status'
     | '/incidents/$incidentId'
     | '/incidents'
   id:
     | '__root__'
     | '/'
     | '/alerts'
+    | '/analytics'
     | '/correlations'
     | '/investigation'
+    | '/mitre'
+    | '/reports'
+    | '/settings'
+    | '/system-status'
     | '/incidents/$incidentId'
     | '/incidents/'
   fileRoutesById: FileRoutesById
@@ -102,8 +162,13 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AlertsRoute: typeof AlertsRoute
+  AnalyticsRoute: typeof AnalyticsRoute
   CorrelationsRoute: typeof CorrelationsRoute
   InvestigationRoute: typeof InvestigationRoute
+  MitreRoute: typeof MitreRoute
+  ReportsRoute: typeof ReportsRoute
+  SettingsRoute: typeof SettingsRoute
+  SystemStatusRoute: typeof SystemStatusRoute
   IncidentsIncidentIdRoute: typeof IncidentsIncidentIdRoute
   IncidentsIndexRoute: typeof IncidentsIndexRoute
 }
@@ -124,6 +189,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AlertsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/analytics': {
+      id: '/analytics'
+      path: '/analytics'
+      fullPath: '/analytics'
+      preLoaderRoute: typeof AnalyticsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/correlations': {
       id: '/correlations'
       path: '/correlations'
@@ -136,6 +208,34 @@ declare module '@tanstack/react-router' {
       path: '/investigation'
       fullPath: '/investigation'
       preLoaderRoute: typeof InvestigationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mitre': {
+      id: '/mitre'
+      path: '/mitre'
+      fullPath: '/mitre'
+      preLoaderRoute: typeof MitreRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reports': {
+      id: '/reports'
+      path: '/reports'
+      fullPath: '/reports'
+      preLoaderRoute: typeof ReportsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/system-status': {
+      id: '/system-status'
+      path: '/system-status'
+      fullPath: '/system-status'
+      preLoaderRoute: typeof SystemStatusRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/incidents/': {
@@ -158,11 +258,26 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AlertsRoute: AlertsRoute,
+  AnalyticsRoute: AnalyticsRoute,
   CorrelationsRoute: CorrelationsRoute,
   InvestigationRoute: InvestigationRoute,
+  MitreRoute: MitreRoute,
+  ReportsRoute: ReportsRoute,
+  SettingsRoute: SettingsRoute,
+  SystemStatusRoute: SystemStatusRoute,
   IncidentsIncidentIdRoute: IncidentsIncidentIdRoute,
   IncidentsIndexRoute: IncidentsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
