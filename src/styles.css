@@ -5,6 +5,11 @@
 @custom-variant dark (&:is(.dark *));
 
 /*
+ * SentinelIQ — SOC analyst console design system.
+ * Dark, restrained, severity-driven color. No neon, no gradients-as-decoration.
+ */
+
+/*
  * Design system definition.
  *
  * The @theme inline block maps CSS custom properties to Tailwind utility
