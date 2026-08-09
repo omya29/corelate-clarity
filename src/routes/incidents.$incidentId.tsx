@@ -165,7 +165,7 @@ function InvestigationPage() {
             <CheckCircle2 className="size-3.5" aria-hidden /> Close incident
           </Button>
           <Button asChild variant="ghost" size="sm" className="h-8 gap-1.5 text-xs">
-            <Link to="/reports" search={{ incident: incident.id }}>
+            <Link to="/reports">
               <FileText className="size-3.5" aria-hidden /> Report
             </Link>
           </Button>
