@@ -10,12 +10,30 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AlertsRouteImport } from './routes/alerts'
+import { Route as CorrelationsRouteImport } from './routes/correlations'
+import { Route as InvestigationRouteImport } from './routes/investigation'
 import { Route as IncidentsIndexRouteImport } from './routes/incidents.index'
 import { Route as IncidentsIncidentIdRouteImport } from './routes/incidents.$incidentId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AlertsRoute = AlertsRouteImport.update({
+  id: '/alerts',
+  path: '/alerts',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CorrelationsRoute = CorrelationsRouteImport.update({
+  id: '/correlations',
+  path: '/correlations',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InvestigationRoute = InvestigationRouteImport.update({
+  id: '/investigation',
+  path: '/investigation',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IncidentsIndexRoute = IncidentsIndexRouteImport.update({
@@ -31,30 +49,61 @@ const IncidentsIncidentIdRoute = IncidentsIncidentIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/alerts': typeof AlertsRoute
+  '/correlations': typeof CorrelationsRoute
+  '/investigation': typeof InvestigationRoute
   '/incidents/$incidentId': typeof IncidentsIncidentIdRoute
   '/incidents/': typeof IncidentsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/alerts': typeof AlertsRoute
+  '/correlations': typeof CorrelationsRoute
+  '/investigation': typeof InvestigationRoute
   '/incidents/$incidentId': typeof IncidentsIncidentIdRoute
   '/incidents': typeof IncidentsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/alerts': typeof AlertsRoute
+  '/correlations': typeof CorrelationsRoute
+  '/investigation': typeof InvestigationRoute
   '/incidents/$incidentId': typeof IncidentsIncidentIdRoute
   '/incidents/': typeof IncidentsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/incidents/$incidentId' | '/incidents/'
+  fullPaths:
+    | '/'
+    | '/alerts'
+    | '/correlations'
+    | '/investigation'
+    | '/incidents/$incidentId'
+    | '/incidents/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/incidents/$incidentId' | '/incidents'
-  id: '__root__' | '/' | '/incidents/$incidentId' | '/incidents/'
+  to:
+    | '/'
+    | '/alerts'
+    | '/correlations'
+    | '/investigation'
+    | '/incidents/$incidentId'
+    | '/incidents'
+  id:
+    | '__root__'
+    | '/'
+    | '/alerts'
+    | '/correlations'
+    | '/investigation'
+    | '/incidents/$incidentId'
+    | '/incidents/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AlertsRoute: typeof AlertsRoute
+  CorrelationsRoute: typeof CorrelationsRoute
+  InvestigationRoute: typeof InvestigationRoute
   IncidentsIncidentIdRoute: typeof IncidentsIncidentIdRoute
   IncidentsIndexRoute: typeof IncidentsIndexRoute
 }
@@ -66,6 +115,27 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/alerts': {
+      id: '/alerts'
+      path: '/alerts'
+      fullPath: '/alerts'
+      preLoaderRoute: typeof AlertsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/correlations': {
+      id: '/correlations'
+      path: '/correlations'
+      fullPath: '/correlations'
+      preLoaderRoute: typeof CorrelationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/investigation': {
+      id: '/investigation'
+      path: '/investigation'
+      fullPath: '/investigation'
+      preLoaderRoute: typeof InvestigationRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/incidents/': {
@@ -87,6 +157,9 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AlertsRoute: AlertsRoute,
+  CorrelationsRoute: CorrelationsRoute,
+  InvestigationRoute: InvestigationRoute,
   IncidentsIncidentIdRoute: IncidentsIncidentIdRoute,
   IncidentsIndexRoute: IncidentsIndexRoute,
 }

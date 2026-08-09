@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { Fragment, useMemo, useState } from "react";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -107,9 +107,8 @@ function AlertsPage() {
             </thead>
             <tbody>
               {rows.map((a) => (
-                <>
+                <Fragment key={a.id}>
                   <tr
-                    key={a.id}
                     onClick={() => setOpen(open === a.id ? null : a.id)}
                     className="cursor-pointer border-b border-border hover:bg-accent/40"
                   >
@@ -145,7 +144,7 @@ function AlertsPage() {
                       </td>
                     </tr>
                   )}
-                </>
+                </Fragment>
               ))}
             </tbody>
           </table>
