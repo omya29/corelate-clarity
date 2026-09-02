@@ -56,7 +56,7 @@ export function StateIndicator({ state }: { state: ComponentState }) {
 }
 
 /** Honest data-provenance marker. Never hide that a screen is showing synthetic data. */
-export function SourceBadge({ source, error }: { source: DataSource | undefined; error?: string }) {
+export function SourceBadge({ source, error }: { source: DataSource | undefined; error?: string | undefined }) {
   if (!source) return null;
   if (source === "live") {
     return (
