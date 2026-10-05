@@ -15,7 +15,10 @@ import {
   ShieldAlert,
   type LucideIcon,
 } from "lucide-react";
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
+import { ChevronsLeft, ChevronsRight } from "lucide-react";
+import { PulseDot } from "@/components/soc/entity";
+import { AutoRefresh } from "./auto-refresh";
 import { cn } from "@/lib/utils";
 import { useHealth } from "@/lib/sentineliq/hooks";
 import { useMode } from "@/lib/sentineliq/mode";
@@ -54,16 +57,16 @@ const NAV: NavItem[] = [
 
 const GROUPS = ["Operations", "Analysis", "Reporting", "Platform"];
 
-function Sidebar() {
+function Sidebar({ collapsed, onToggle }: { collapsed: boolean; onToggle: () => void }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   return (
-    <aside className="hidden w-56 shrink-0 flex-col border-r border-border bg-sidebar lg:flex">
+    <aside className={cn("sticky top-0 hidden h-screen shrink-0 flex-col border-r border-border bg-sidebar transition-[width] duration-200 lg:flex", collapsed ? "w-14" : "w-56")}>
       <div className="flex h-14 items-center gap-2.5 border-b border-border px-4">
         <span className="flex size-7 items-center justify-center rounded-sm border border-primary/40 bg-primary/12">
           <Gauge className="size-4 text-primary" aria-hidden />
         </span>
-        <div className="leading-tight">
+        <div className={cn("leading-tight", collapsed && "hidden")}>
           <p className="text-sm font-semibold tracking-tight text-foreground">SentinelIQ</p>
           <p className="font-mono text-[10px] tracking-widest text-muted-foreground">TRIAGE CONSOLE</p>
         </div>
@@ -72,7 +75,7 @@ function Sidebar() {
       <nav className="flex-1 overflow-y-auto px-2 py-3">
         {GROUPS.map((group) => (
           <div key={group} className="mb-3">
-            <p className="label-caps px-2 pb-1">{group}</p>
+            {collapsed ? <div className="mx-2 mb-1 border-t border-border" /> : <p className="label-caps px-2 pb-1">{group}</p>}
             <ul className="space-y-0.5">
               {NAV.filter((n) => n.group === group).map((item) => {
                 const active = item.to === "/" ? pathname === "/" : pathname.startsWith(item.to);
@@ -80,7 +83,9 @@ function Sidebar() {
                   <li key={item.to}>
                     <Link
                       to={item.to}
+                      title={collapsed ? item.label : undefined}
                       className={cn(
+                        collapsed && "justify-center",
                         "flex items-center gap-2.5 rounded-sm px-2 py-1.5 text-[13px] transition-colors",
                         active
                           ? "bg-sidebar-accent font-medium text-sidebar-accent-foreground shadow-[inset_2px_0_0_0_var(--color-primary)]"
@@ -88,7 +93,7 @@ function Sidebar() {
                       )}
                     >
                       <item.icon className={cn("size-4", active ? "text-primary" : "text-muted-foreground")} aria-hidden />
-                      {item.label}
+                      {!collapsed && item.label}
                     </Link>
                   </li>
                 );
@@ -98,7 +103,16 @@ function Sidebar() {
         ))}
       </nav>
 
-      <div className="border-t border-border px-3 py-3">
+      <button
+        type="button"
+        onClick={onToggle}
+        aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+        className="flex items-center gap-2 border-t border-border px-4 py-2 text-[11px] text-muted-foreground hover:text-foreground"
+      >
+        {collapsed ? <ChevronsRight className="size-4" aria-hidden /> : <ChevronsLeft className="size-4" aria-hidden />}
+        {!collapsed && "Collapse"}
+      </button>
+      <div className={cn("border-t border-border px-3 py-3", collapsed && "hidden")}>
         <p className="label-caps">Scope</p>
         <p className="mt-1 text-[11px] leading-snug text-muted-foreground">
           Analysis and triage layer on top of Wazuh. Not a SIEM, XDR, EDR or SOAR platform.
@@ -122,7 +136,7 @@ function StatusPill({
     <Tooltip>
       <TooltipTrigger asChild>
         <span className="flex items-center gap-1.5 rounded-sm border border-border bg-surface px-2 py-1 text-[11px]">
-          <span className={cn("size-1.5 rounded-full", meta.dot)} aria-hidden />
+          {state === "unknown" ? <span className={cn("size-1.5 rounded-full", meta.dot)} aria-hidden /> : <PulseDot className={meta.dot} />}
           <span className="text-muted-foreground">{name}</span>
           <span className={cn("font-mono font-semibold tracking-wider", meta.text)}>{meta.label}</span>
         </span>
@@ -147,6 +161,7 @@ function TopBar() {
       </div>
 
       <span className="flex items-center gap-1.5 rounded-sm border border-border-strong bg-background px-2 py-1 font-mono text-[10px] font-semibold tracking-widest text-muted-foreground">
+        <PulseDot className="bg-medium" />
         ENV: LAB
       </span>
 
@@ -164,6 +179,7 @@ function TopBar() {
       </div>
 
       <div className="ml-auto flex items-center gap-2">
+        <AutoRefresh />
         <div className="flex items-center rounded-sm border border-border bg-background p-0.5">
           {(["demo", "live"] as const).map((m) => (
             <button
@@ -247,9 +263,10 @@ function MobileNav() {
 
 export function AppShell({ children }: { children: ReactNode }) {
   const { mode } = useMode();
+  const [collapsed, setCollapsed] = useState(false);
   return (
     <div className="flex min-h-screen bg-background">
-      <Sidebar />
+      <Sidebar collapsed={collapsed} onToggle={() => setCollapsed((c) => !c)} />
       <div className="flex min-w-0 flex-1 flex-col">
         <TopBar />
         <MobileNav />

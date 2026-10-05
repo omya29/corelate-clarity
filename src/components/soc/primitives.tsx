@@ -136,12 +136,23 @@ export function PageHeader({
 }
 
 export function AwaitingBackend({ label = "Awaiting backend data" }: { label?: string }) {
+  const bars = [62, 88, 45, 74, 30, 56];
   return (
-    <div className="flex h-full min-h-24 flex-col items-center justify-center gap-1 rounded-md border border-dashed border-border-strong px-4 py-6 text-center">
-      <p className="font-mono text-xs font-semibold tracking-wider text-muted-foreground">{label.toUpperCase()}</p>
-      <p className="text-xs text-muted-foreground">
-        This metric is not provided by the SentinelIQ backend yet. No value is estimated here.
-      </p>
+    <div className="flex h-full min-h-24 flex-col gap-3 py-1" role="status" aria-label={label}>
+      <div className="flex flex-1 items-end gap-2">
+        {bars.map((h, i) => (
+          <div
+            key={i}
+            className="flex-1 animate-pulse rounded-sm bg-secondary"
+            style={{ height: `${h}%`, minHeight: 12, animationDelay: `${i * 120}ms` }}
+          />
+        ))}
+      </div>
+      <div className="space-y-1.5">
+        <div className="h-2 w-2/3 animate-pulse rounded-sm bg-secondary" />
+        <div className="h-2 w-1/3 animate-pulse rounded-sm bg-secondary" />
+      </div>
+      <p className="font-mono text-[10px] tracking-wider text-muted-foreground">{label.toUpperCase()} · NO VALUE ESTIMATED</p>
     </div>
   );
 }
