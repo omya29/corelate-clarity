@@ -61,7 +61,7 @@ function Sidebar({ collapsed, onToggle }: { collapsed: boolean; onToggle: () => 
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   return (
-    <aside className=cn("sticky top-0 hidden h-screen shrink-0 flex-col border-r border-border bg-sidebar transition-[width] duration-200 lg:flex", collapsed ? "w-14" : "w-56")>
+    <aside className={cn("sticky top-0 hidden h-screen shrink-0 flex-col border-r border-border bg-sidebar transition-[width] duration-200 lg:flex", collapsed ? "w-14" : "w-56")}>
       <div className="flex h-14 items-center gap-2.5 border-b border-border px-4">
         <span className="flex size-7 items-center justify-center rounded-sm border border-primary/40 bg-primary/12">
           <Gauge className="size-4 text-primary" aria-hidden />
