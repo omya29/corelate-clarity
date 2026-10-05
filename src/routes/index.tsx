@@ -224,26 +224,28 @@ function OverviewPage() {
           )}
         </Panel>
 
-        <Panel title="MITRE technique distribution" subtitle="From backend-provided mappings only">
+        <Panel title="MITRE technique heatmap" subtitle="From backend-provided mappings only">
           {m ? (
-            <ul className="space-y-2">
+            <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-3">
               {m.mitre_distribution.map((tech) => {
                 const max = Math.max(...m.mitre_distribution.map((t) => t.count));
+                const pct = Math.round(15 + (tech.count / max) * 70);
                 return (
-                  <li key={tech.technique_id}>
-                    <div className="flex items-baseline justify-between gap-2">
-                      <span className="truncate text-xs text-foreground">
-                        <span className="font-mono text-primary">{tech.technique_id}</span> {tech.name}
-                      </span>
-                      <span className="font-mono text-xs text-muted-foreground">{tech.count}</span>
+                  <div
+                    key={tech.technique_id}
+                    title={`${tech.technique_id} ${tech.name}: ${tech.count} alerts`}
+                    className="rounded-sm border border-border p-2"
+                    style={{ backgroundColor: `color-mix(in oklab, var(--critical) ${pct}%, var(--card))` }}
+                  >
+                    <div className="flex items-baseline justify-between gap-1">
+                      <span className="font-mono text-[11px] font-semibold text-foreground">{tech.technique_id}</span>
+                      <span className="font-mono text-[11px] text-foreground">{tech.count}</span>
                     </div>
-                    <div className="mt-1 h-1 w-full overflow-hidden rounded-full bg-secondary">
-                      <div className="h-full rounded-full bg-primary" style={{ width: `${(tech.count / max) * 100}%` }} />
-                    </div>
-                  </li>
+                    <p className="mt-0.5 truncate text-[10px] text-foreground/80">{tech.name}</p>
+                  </div>
                 );
               })}
-            </ul>
+            </div>
           ) : (
             <AwaitingBackend />
           )}

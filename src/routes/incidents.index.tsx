@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
-import { ArrowUpDown, Search } from "lucide-react";
+import { Fragment, useMemo, useState } from "react";
+import { Entity } from "@/components/soc/entity";
+import { ArrowUpDown, ChevronRight, Search, Sparkles } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -63,6 +64,14 @@ function IncidentsPage() {
   const [sort, setSort] = useState<SortKey>("priority_score");
   const [page, setPage] = useState(1);
   const perPage = 10;
+  const [expanded, setExpanded] = useState<Set<string>>(new Set());
+  const toggle = (id: string) =>
+    setExpanded((prev) => {
+      const n = new Set(prev);
+      if (n.has(id)) n.delete(id);
+      else n.add(id);
+      return n;
+    });
 
   const hosts = [...new Set(incidents.map((i) => i.host))];
   const ips = [...new Set(incidents.map((i) => i.source_ip).filter(Boolean) as string[])];
@@ -120,7 +129,7 @@ function IncidentsPage() {
         actions={<SourceBadge source={data?.source} error={data?.error} />}
       />
 
-      <Panel title="Filters" bodyClassName="p-3">
+      <Panel title="Filters" className="sticky top-0 z-20 shadow-lg shadow-background/60" bodyClassName="p-3">
         <div className="grid gap-2 md:grid-cols-3 xl:grid-cols-7">
           <div className="relative xl:col-span-2">
             <Search className="absolute left-2.5 top-2.5 size-3.5 text-muted-foreground" aria-hidden />
@@ -214,7 +223,8 @@ function IncidentsPage() {
           <table className="w-full min-w-[1180px] text-left text-[13px]">
             <thead className="border-b border-border bg-surface">
               <tr className="label-caps">
-                <th className="px-4 py-2 font-medium">Incident ID</th>
+                <th className="w-8 py-2 pl-3" aria-label="Expand" />
+                <th className="px-3 py-2 font-medium">Incident ID</th>
                 <th className="px-3 py-2 font-medium">Severity</th>
                 <th className="px-3 py-2 font-medium">Incident title</th>
                 <th className="px-3 py-2 font-medium">Alerts</th>
@@ -230,21 +240,35 @@ function IncidentsPage() {
             <tbody>
               {isLoading && (
                 <tr>
-                  <td colSpan={11} className="px-4 py-8 text-center text-xs text-muted-foreground">
+                  <td colSpan={12} className="px-4 py-8 text-center text-xs text-muted-foreground">
                     Loading incidents…
                   </td>
                 </tr>
               )}
               {!isLoading && rows.length === 0 && (
                 <tr>
-                  <td colSpan={11} className="px-4 py-8 text-center text-xs text-muted-foreground">
+                  <td colSpan={12} className="px-4 py-8 text-center text-xs text-muted-foreground">
                     No incidents match the current filters.
                   </td>
                 </tr>
               )}
-              {rows.map((inc) => (
-                <tr key={inc.id} className="border-b border-border last:border-0 hover:bg-accent/40">
-                  <td className="px-4 py-2">
+              {rows.map((inc) => {
+                const open = expanded.has(inc.id);
+                return (
+                <Fragment key={inc.id}>
+                <tr className={`border-b border-border hover:bg-accent/40 ${open ? "bg-accent/30" : ""}`}>
+                  <td className="py-2 pl-3">
+                    <button
+                      type="button"
+                      onClick={() => toggle(inc.id)}
+                      aria-expanded={open}
+                      aria-label={open ? "Collapse incident" : "Expand incident"}
+                      className="flex size-5 items-center justify-center rounded-sm text-muted-foreground hover:bg-accent hover:text-foreground"
+                    >
+                      <ChevronRight className={`size-3.5 transition-transform ${open ? "rotate-90" : ""}`} aria-hidden />
+                    </button>
+                  </td>
+                  <td className="px-3 py-2">
                     <Link
                       to="/incidents/$incidentId"
                       params={{ incidentId: inc.id }}
@@ -266,8 +290,8 @@ function IncidentsPage() {
                   <td className="px-3 py-2 font-mono text-xs">{inc.alert_count}</td>
                   <td className="px-3 py-2 font-mono text-[11px] text-muted-foreground">{formatDateTime(inc.first_seen)}</td>
                   <td className="px-3 py-2 font-mono text-[11px] text-muted-foreground">{formatDateTime(inc.last_seen)}</td>
-                  <td className="px-3 py-2 font-mono text-xs">{inc.host}</td>
-                  <td className="px-3 py-2 font-mono text-xs">{inc.source_ip ?? "—"}</td>
+                  <td className="px-3 py-2"><Entity value={inc.host} kind="host" /></td>
+                  <td className="px-3 py-2"><Entity value={inc.source_ip} kind="ip" /></td>
                   <td className="px-3 py-2 font-mono text-xs text-primary">{inc.mitre_techniques.join(", ") || "—"}</td>
                   <td className="px-3 py-2">
                     <div className="flex items-center gap-2">
@@ -282,7 +306,35 @@ function IncidentsPage() {
                   </td>
                   <td className="px-3 py-2"><StatusBadge status={inc.status} /></td>
                 </tr>
-              ))}
+                {open && (
+                  <tr className="border-b border-border bg-surface">
+                    <td colSpan={12} className="px-4 py-3">
+                      <div className="grid gap-4 md:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
+                        <div className="min-w-0">
+                          <p className="label-caps flex items-center gap-1.5">
+                            <Sparkles className="size-3 text-primary" aria-hidden /> AI-assisted summary
+                            {inc.summary && <span className="normal-case tracking-normal">· {inc.summary.provider} / {inc.summary.model}</span>}
+                          </p>
+                          <p className="mt-1 text-xs leading-relaxed text-foreground">
+                            {inc.summary?.text ?? "No summary returned by the backend for this incident."}
+                          </p>
+                          <p className="mt-1 text-[10px] text-muted-foreground">Model output — not an analyst decision.</p>
+                        </div>
+                        <div className="space-y-2 text-xs">
+                          <div className="flex justify-between gap-2"><span className="text-muted-foreground">XGBoost prediction</span>{inc.ml_prediction ? <SeverityBadge severity={inc.ml_prediction} /> : <span className="text-muted-foreground">—</span>}</div>
+                          <div className="flex justify-between gap-2"><span className="text-muted-foreground">Priority score</span><span className="font-mono font-semibold">{inc.priority_score}/100</span></div>
+                          <div className="flex justify-between gap-2"><span className="text-muted-foreground">Assigned</span><span>{inc.assigned_analyst ?? "Unassigned"}</span></div>
+                          <Link to="/incidents/$incidentId" params={{ incidentId: inc.id }} className="inline-block text-primary hover:underline">
+                            Open SHAP explanation and timeline →
+                          </Link>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                )}
+                </Fragment>
+                );
+              })}
             </tbody>
           </table>
         </div>
