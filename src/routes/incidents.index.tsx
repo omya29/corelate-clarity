@@ -1,3 +1,4 @@
+import { AbstentionBadge } from "@/components/soc/abstention";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Fragment, useMemo, useState } from "react";
 import { Entity } from "@/components/soc/entity";
@@ -63,6 +64,7 @@ function IncidentsPage() {
   const [timeWindow, setTimeWindow] = useState("all");
   const [sort, setSort] = useState<SortKey>("priority_score");
   const [page, setPage] = useState(1);
+  const [abstainedOnly, setAbstainedOnly] = useState(false);
   const perPage = 10;
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
   const toggle = (id: string) =>
@@ -90,6 +92,7 @@ function IncidentsPage() {
       if (host !== "all" && i.host !== host) return false;
       if (sourceIp !== "all" && i.source_ip !== sourceIp) return false;
       if (technique !== "all" && !i.mitre_techniques.includes(technique)) return false;
+      if (abstainedOnly && i.ai_abstained !== true) return false;
       if (!withinWindow(i.last_seen, timeWindow, now)) return false;
       if (q) {
         const hay = `${i.id} ${i.title} ${i.host} ${i.source_ip ?? ""} ${i.mitre_techniques.join(" ")}`.toLowerCase();
@@ -104,7 +107,7 @@ function IncidentsPage() {
           ? b.alert_count - a.alert_count
           : b.priority_score - a.priority_score,
     );
-  }, [incidents, severity, status, host, sourceIp, technique, timeWindow, q, sort, now]);
+  }, [incidents, severity, status, host, sourceIp, technique, timeWindow, abstainedOnly, q, sort, now]);
 
   const pageCount = Math.max(1, Math.ceil(filtered.length / perPage));
   const current = Math.min(page, pageCount);
@@ -169,6 +172,14 @@ function IncidentsPage() {
               ))}
             </SelectContent>
           </Select>
+          <button
+            type="button"
+            aria-pressed={abstainedOnly}
+            onClick={() => { setAbstainedOnly((v) => !v); setPage(1); }}
+            className={`h-9 rounded-md border px-2 text-xs ${abstainedOnly ? "border-medium/50 bg-medium-soft text-medium" : "border-input text-muted-foreground hover:text-foreground"}`}
+          >
+            ⚠ Abstained only
+          </button>
           <Select value={host} onValueChange={(v) => { setHost(v); setPage(1); }}>
             <SelectTrigger className="h-9 text-xs"><SelectValue placeholder="Host" /></SelectTrigger>
             <SelectContent>
@@ -277,7 +288,7 @@ function IncidentsPage() {
                       {inc.id}
                     </Link>
                   </td>
-                  <td className="px-3 py-2"><SeverityBadge severity={inc.severity} /></td>
+                  <td className="px-3 py-2"><SeverityBadge severity={inc.severity} /><div className="mt-1"><AbstentionBadge incident={inc} compact /></div></td>
                   <td className="max-w-80 px-3 py-2">
                     <Link
                       to="/incidents/$incidentId"

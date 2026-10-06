@@ -1,3 +1,4 @@
+import { AbstentionBadge } from "@/components/soc/abstention";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { PageHeader, Panel, SeverityBadge, SourceBadge, StatusBadge } from "@/components/soc/primitives";
 import { PipelineFlow } from "@/components/soc/pipeline";
@@ -45,6 +46,7 @@ function InvestigationIndex() {
               {inc.host} · {inc.source_ip ?? "—"} · {inc.alert_count} alerts · score {inc.priority_score}
             </p>
             <p className="mt-1 font-mono text-[11px] text-muted-foreground">{formatDateTime(inc.last_seen)}</p>
+            <div className="mt-2"><AbstentionBadge incident={inc} /></div>
             <div className="mt-2 flex items-center gap-2">
               <StatusBadge status={inc.status} />
               <span className="text-[11px] text-muted-foreground">{inc.assigned_analyst ?? "Unassigned"}</span>
