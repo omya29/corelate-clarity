@@ -1,3 +1,5 @@
+import { FeedbackPanel } from "@/components/soc/feedback-panel";
+import { AbstentionBadge } from "@/components/soc/abstention";
 import { createFileRoute, Link, useParams } from "@tanstack/react-router";
 import { useState } from "react";
 import { ArrowLeft, Brain, CheckCircle2, ExternalLink, FileText, Sparkles, UserPlus } from "lucide-react";
@@ -101,6 +103,7 @@ function InvestigationPage() {
               <StatusBadge status={incident.status} />
               <SourceBadge source={incidentQuery.data?.source} error={incidentQuery.data?.error} />
             </div>
+            <div className="mt-1.5"><AbstentionBadge incident={incident} /></div>
             <h1 className="mt-1.5 text-lg font-semibold text-foreground">{incident.title}</h1>
             <div className="mt-3 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               <KeyValue label="Affected host" value={incident.host} mono />
@@ -119,6 +122,8 @@ function InvestigationPage() {
           </div>
         </div>
       </div>
+
+      <FeedbackPanel incidentId={incident.id} />
 
       {/* Analyst actions */}
       <Panel title="Analyst actions" subtitle="SentinelIQ assists — the analyst remains the decision maker. No automated containment is performed." bodyClassName="p-3">
