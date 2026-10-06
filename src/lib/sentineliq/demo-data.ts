@@ -411,6 +411,8 @@ export const demoAlerts: WazuhAlert[] = [
 export const demoIncidents: Incident[] = [
   {
     id: "INC-2026-0042",
+    ai_abstained: false,
+    prediction_set: "High",
     title: "Suspicious Authentication Activity",
     severity: "high",
     status: "investigating",
@@ -441,6 +443,8 @@ export const demoIncidents: Incident[] = [
   },
   {
     id: "INC-2026-0043",
+    ai_abstained: false,
+    prediction_set: "Critical",
     title: "Encoded PowerShell Execution With Persistence Attempt",
     severity: "critical",
     status: "escalated",
@@ -464,6 +468,8 @@ export const demoIncidents: Incident[] = [
   },
   {
     id: "INC-2026-0044",
+    ai_abstained: true,
+    prediction_set: "Medium, High",
     title: "Web Scanning Followed By Attack Pattern",
     severity: "medium",
     status: "triaged",
@@ -487,6 +493,8 @@ export const demoIncidents: Incident[] = [
   },
   {
     id: "INC-2026-0045",
+    ai_abstained: true,
+    prediction_set: "Medium, High, Critical",
     title: "Off-Hours Database Access With Large Export",
     severity: "high",
     status: "new",

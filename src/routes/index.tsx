@@ -1,3 +1,4 @@
+import { AbstentionBadge } from "@/components/soc/abstention";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   Area,
@@ -293,6 +294,7 @@ function OverviewPage() {
                   <td className="px-3 py-2 font-mono text-xs text-muted-foreground">{formatTime(inc.last_seen)}</td>
                   <td className="px-3 py-2">
                     <SeverityBadge severity={inc.severity} />
+                    <div className="mt-1"><AbstentionBadge incident={inc} compact /></div>
                   </td>
                   <td className="max-w-72 truncate px-3 py-2 text-foreground">{inc.title}</td>
                   <td className="px-3 py-2 font-mono text-xs">{inc.host}</td>

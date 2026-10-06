@@ -52,6 +52,19 @@ export interface Incident {
   correlation_group: string | null;
   summary: IncidentSummary | null;
   notes: IncidentNote[];
+  /** Conformal prediction abstention — optional until the backend ships it. */
+  ai_abstained?: boolean | null | undefined;
+  prediction_set?: string | null | undefined;
+}
+
+export type FeedbackAction = "confirmed" | "dismissed";
+
+export interface IncidentFeedback {
+  id?: string | number;
+  analyst: string;
+  action: FeedbackAction;
+  comment?: string | null;
+  created_at?: string | null;
 }
 
 export interface IncidentSummary {

@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import * as api from "./api";
 import { useMode } from "./mode";
-import type { IncidentStatus } from "./types";
+import type { FeedbackAction, IncidentStatus } from "./types";
 
 const STALE = 15_000;
 
@@ -86,4 +86,19 @@ export function useIncidentActions(id: string) {
   });
 
   return { setStatus, addNote, assign };
+}
+
+export function useIncidentFeedback(id: string) {
+  const { mode } = useMode();
+  return useQuery({ queryKey: ["incident-feedback", mode, id], queryFn: () => api.getIncidentFeedback(mode, id) });
+}
+
+export function useSubmitFeedback(id: string) {
+  const { mode, analyst } = useMode();
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (v: { action: FeedbackAction; comment: string }) =>
+      api.submitIncidentFeedback(mode, id, { analyst, ...v }),
+    onSuccess: () => void qc.invalidateQueries({ queryKey: ["incident-feedback", mode, id] }),
+  });
 }

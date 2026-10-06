@@ -21,6 +21,8 @@ import type {
   AnalyticsMetrics,
   CorrelationGroup,
   DashboardMetrics,
+  FeedbackAction,
+  IncidentFeedback,
   HealthResponse,
   Incident,
   IncidentExplanation,
@@ -234,3 +236,32 @@ export const API_ENDPOINTS = [
   { method: "POST", path: "/api/incidents/{id}/assign", purpose: "Assign incident to an analyst" },
   { method: "POST", path: "/api/incidents/{id}/summary", purpose: "Request Ollama-generated incident summary" },
 ] as const;
+
+/* ------------------------------------------------------------------ *
+ * Analyst feedback (true / false positive)
+ * ------------------------------------------------------------------ */
+const demoFeedback: Record<string, IncidentFeedback[]> = {};
+
+/** GET /incidents/{id}/feedback */
+export const getIncidentFeedback = (mode: Mode, id: string) =>
+  withFallback<IncidentFeedback[] | null>(mode, `/incidents/${id}/feedback`, () =>
+    mode === "live" ? null : [...(demoFeedback[id] ?? [])],
+  );
+
+/** POST /incidents/{id}/feedback — in live mode a failure is thrown, never faked. */
+export async function submitIncidentFeedback(
+  mode: Mode,
+  id: string,
+  body: { analyst: string; action: FeedbackAction; comment: string },
+): Promise<Result<IncidentFeedback>> {
+  if (mode === "live") {
+    const data = await request<IncidentFeedback>(`/incidents/${id}/feedback`, {
+      method: "POST",
+      body: JSON.stringify(body),
+    });
+    return { data, source: "live" };
+  }
+  const entry: IncidentFeedback = { ...body, id: Date.now(), created_at: new Date().toISOString() };
+  demoFeedback[id] = [...(demoFeedback[id] ?? []), entry];
+  return { data: entry, source: "demo" };
+}
