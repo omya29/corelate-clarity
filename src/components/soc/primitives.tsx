@@ -99,15 +99,15 @@ export function Panel({
   return (
     <section className={cn("panel flex flex-col overflow-hidden", className)}>
       {(title || actions) && (
-        <header className="flex items-start justify-between gap-3 border-b border-border px-4 py-3">
+        <header className="flex items-start justify-between gap-3 border-b border-border px-3 py-2">
           <div className="min-w-0">
-            {title && <h2 className="truncate text-sm font-semibold text-foreground">{title}</h2>}
-            {subtitle && <p className="mt-0.5 text-xs text-muted-foreground">{subtitle}</p>}
+            {title && <h2 className="truncate text-[13px] font-semibold text-foreground">{title}</h2>}
+            {subtitle && <p className="mt-0.5 text-[11px] text-muted-foreground">{subtitle}</p>}
           </div>
           {actions && <div className="flex shrink-0 items-center gap-2">{actions}</div>}
         </header>
       )}
-      <div className={cn("flex-1 p-4", bodyClassName)}>{children}</div>
+      <div className={cn("flex-1 px-3 py-2.5", bodyClassName)}>{children}</div>
     </section>
   );
 }
@@ -124,11 +124,11 @@ export function PageHeader({
   actions?: ReactNode;
 }) {
   return (
-    <div className="flex flex-wrap items-end justify-between gap-4 border-b border-border pb-4">
+    <div className="flex flex-wrap items-end justify-between gap-3 border-b border-border pb-2.5">
       <div>
-        {eyebrow && <p className="label-caps">{eyebrow}</p>}
-        <h1 className="mt-1 text-xl font-semibold text-foreground">{title}</h1>
-        {description && <p className="mt-1 max-w-3xl text-sm text-muted-foreground">{description}</p>}
+        {eyebrow && <p className="label-caps text-[10px]">{eyebrow}</p>}
+        <h1 className="mt-0.5 text-lg font-semibold text-foreground">{title}</h1>
+        {description && <p className="mt-0.5 max-w-3xl text-xs text-muted-foreground">{description}</p>}
       </div>
       {actions && <div className="flex items-center gap-2">{actions}</div>}
     </div>
@@ -180,5 +180,39 @@ export function ScoreMeter({ score, severity }: { score: number; severity: Sever
         />
       </div>
     </div>
+  );
+}
+
+/** Hairline-grid strip for KpiCard tiles, Splunk single-value style. */
+export function StatStrip({ children, className }: { children: ReactNode; className?: string }) {
+  return (
+    <div className={cn("grid gap-px overflow-hidden border border-border bg-border", className)}>{children}</div>
+  );
+}
+
+/** Splunk-style top-values list: mono label, proportional background bar, count. */
+export function RankedList({
+  items,
+  emptyLabel = "No data reported yet",
+}: {
+  items: { label: string; count: number }[];
+  emptyLabel?: string;
+}) {
+  if (!items.length) return <p className="py-6 text-center text-[11px] text-muted-foreground">{emptyLabel}</p>;
+  const max = Math.max(...items.map((i) => i.count), 1);
+  return (
+    <ul className="space-y-px">
+      {items.map((it) => (
+        <li key={it.label} className="relative flex items-center justify-between gap-3 px-1.5 py-1">
+          <span
+            className="absolute inset-y-0 left-0 bg-secondary"
+            style={{ width: `${Math.max(3, Math.round((it.count / max) * 100))}%` }}
+            aria-hidden
+          />
+          <span className="relative min-w-0 truncate font-mono text-[11px] text-foreground">{it.label}</span>
+          <span className="relative shrink-0 font-mono text-[11px] tabular-nums text-muted-foreground">{it.count}</span>
+        </li>
+      ))}
+    </ul>
   );
 }

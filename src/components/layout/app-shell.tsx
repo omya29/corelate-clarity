@@ -280,7 +280,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             </span>
           </div>
         )}
-        <main className="min-w-0 flex-1 space-y-4 p-4 lg:p-6">{children}</main>
+        <main className="min-w-0 flex-1 space-y-3 p-3 lg:p-4">{children}</main>
       </div>
     </div>
   );

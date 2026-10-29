@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Bar, BarChart, CartesianGrid, Cell, Line, LineChart, ResponsiveContainer, Tooltip as RTooltip, XAxis, YAxis } from "recharts";
-import { AwaitingBackend, PageHeader, Panel, SourceBadge } from "@/components/soc/primitives";
+import { AwaitingBackend, PageHeader, Panel, SourceBadge, StatStrip } from "@/components/soc/primitives";
 import { KpiCard } from "@/components/soc/kpi-card";
 import { useAnalytics } from "@/lib/sentineliq/hooks";
 import { severityMeta } from "@/lib/sentineliq/display";
@@ -33,7 +33,7 @@ function AnalyticsPage() {
         actions={<SourceBadge source={data?.source} error={data?.error} />}
       />
 
-      <div className="grid gap-3 sm:grid-cols-3">
+      <StatStrip className="grid-cols-1 sm:grid-cols-3">
         <KpiCard
           label="Correlation rate"
           value={a?.correlation_rate != null ? `${Math.round(a.correlation_rate * 100)}%` : "—"}
@@ -52,7 +52,7 @@ function AnalyticsPage() {
           hint={a?.triage_time_minutes?.length ? "Median per incident, most recent day" : "Awaiting backend data"}
           accent="low"
         />
-      </div>
+      </StatStrip>
 
       <div className="grid gap-4 xl:grid-cols-2">
         <Panel title="Alerts per day">

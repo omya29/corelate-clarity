@@ -1,18 +1,20 @@
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
+/**
+ * Compact SOC stat tile. Designed to sit inside a StatStrip hairline grid:
+ * no own border, radius or icon — small caps label, mono value, severity accent.
+ */
 export function KpiCard({
   label,
   value,
   hint,
   accent = "neutral",
-  icon,
 }: {
   label: string;
   value: ReactNode;
   hint?: string;
   accent?: "neutral" | "critical" | "high" | "medium" | "low" | "ok";
-  icon?: ReactNode;
 }) {
   const accents: Record<string, string> = {
     neutral: "text-foreground",
@@ -32,14 +34,11 @@ export function KpiCard({
   };
 
   return (
-    <div className="panel relative overflow-hidden p-3.5 pl-4">
-      <span className={cn("absolute inset-y-0 left-0 w-0.5", rails[accent])} aria-hidden />
-      <div className="flex items-start justify-between gap-2">
-        <p className="label-caps">{label}</p>
-        {icon && <span className="text-muted-foreground">{icon}</span>}
-      </div>
-      <p className={cn("mt-2 font-mono text-2xl font-semibold tabular-nums", accents[accent])}>{value}</p>
-      {hint && <p className="mt-1 text-[11px] text-muted-foreground">{hint}</p>}
+    <div className="flex h-full flex-col bg-card px-3 py-2.5">
+      <p className="label-caps text-[10px]">{label}</p>
+      <p className={cn("mt-1.5 font-mono text-xl font-semibold leading-none tabular-nums", accents[accent])}>{value}</p>
+      <span className={cn("mt-2 h-0.5 w-6", rails[accent])} aria-hidden />
+      {hint && <p className="mt-1.5 text-[10px] leading-tight text-muted-foreground">{hint}</p>}
     </div>
   );
 }
