@@ -29,7 +29,7 @@ interface Pair {
 const MAX_IPS = 6;
 const MAX_HOSTS = 6;
 const MAX_EDGES = 16;
-const W = 640;
+const W = 680;
 const H = 300;
 const PAD = 26;
 
@@ -105,7 +105,7 @@ export function NetworkTopology({ alerts }: { alerts: WazuhAlert[] }) {
   }
 
   const ipX = 118;
-  const hostX = W - 118;
+  const hostX = W - 170;
   const maxCount = Math.max(...edges.map((e) => e.count));
 
   return (
