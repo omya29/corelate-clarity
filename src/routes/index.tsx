@@ -177,13 +177,7 @@ function OverviewPage() {
         </Panel>
 
         <Panel title="Security posture" subtitle="Score derived from live incident severity mix">
-          {m && incidents.length ? (
-            <SecurityPosture metrics={m} incidents={incidents} />
-          ) : m ? (
-            <SecurityPosture metrics={m} incidents={[]} />
-          ) : (
-            <AwaitingBackend />
-          )}
+          {m ? <SecurityPosture metrics={m} incidents={incidents} /> : <AwaitingBackend />}
         </Panel>
       </div>
 
