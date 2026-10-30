@@ -39,7 +39,7 @@ function Meter({ label, pct, color, note }: { label: string; pct: number; color:
   );
 }
 
-function StatRow({ label, value, accent }: { label: string; value: number; accent?: string }) {
+function StatRow({ label, value, accent }: { label: string; value: number; accent?: string | undefined }) {
   return (
     <div className="flex items-center justify-between border-b border-border/60 py-1.5 last:border-0">
       <span className="text-[11px] text-muted-foreground">{label}</span>
