@@ -167,6 +167,28 @@ function OverviewPage() {
 
       <div className="grid gap-3 xl:grid-cols-3">
         <Panel
+          title="Network topology"
+          subtitle="Source IP ↔ host attack paths from ingested alerts"
+          className="xl:col-span-2"
+          bodyClassName="px-2 py-2"
+          actions={<SourceBadge source={alertsQuery.data?.source} error={alertsQuery.data?.error} />}
+        >
+          {allAlerts.length ? <NetworkTopology alerts={allAlerts} /> : <AwaitingBackend />}
+        </Panel>
+
+        <Panel title="Security posture" subtitle="Score derived from live incident severity mix">
+          {m && incidents.length ? (
+            <SecurityPosture metrics={m} incidents={incidents} />
+          ) : m ? (
+            <SecurityPosture metrics={m} incidents={[]} />
+          ) : (
+            <AwaitingBackend />
+          )}
+        </Panel>
+      </div>
+
+      <div className="grid gap-3 xl:grid-cols-3">
+        <Panel
           title="Alert volume"
           subtitle="Wazuh alerts ingested vs incidents created"
           className="xl:col-span-2"
