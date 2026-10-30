@@ -12,6 +12,8 @@ import {
 } from "recharts";
 import { AbstentionBadge } from "@/components/soc/abstention";
 import { KpiCard } from "@/components/soc/kpi-card";
+import { NetworkTopology } from "@/components/soc/network-topology";
+import { SecurityPosture } from "@/components/soc/posture-gauge";
 import {
   AwaitingBackend,
   PageHeader,
