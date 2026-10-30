@@ -78,9 +78,9 @@ export function SecurityPosture({ metrics, incidents }: { metrics: DashboardMetr
           {/* zone ticks */}
           {[0, 25, 50, 75, 100].map((t) => {
             const rad = ((180 - t * 1.8) * Math.PI) / 180;
-            const x1 = CX + (R - 9) * Math.cos(rad) * -1 * -1;
+            const x1 = CX + (R - 9) * Math.cos(rad);
             const y1 = CY - (R - 9) * Math.sin(rad);
-            const x2 = CX - (R - 15) * Math.cos(rad) * -1;
+            const x2 = CX + (R - 15) * Math.cos(rad);
             const y2 = CY - (R - 15) * Math.sin(rad);
             return <line key={t} x1={x1} y1={y1} x2={x2} y2={y2} stroke="var(--border-strong)" strokeWidth={1.5} />;
           })}
