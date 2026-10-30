@@ -29,9 +29,13 @@ interface Pair {
 const MAX_IPS = 6;
 const MAX_HOSTS = 6;
 const MAX_EDGES = 16;
-const W = 560;
+const W = 640;
 const H = 300;
 const PAD = 26;
+
+function truncateLabel(s: string, max = 20) {
+  return s.length > max ? `${s.slice(0, max - 1)}…` : s;
+}
 
 function columnY(n: number, i: number) {
   if (n === 1) return H / 2;
