@@ -12,6 +12,8 @@ import {
 } from "recharts";
 import { AbstentionBadge } from "@/components/soc/abstention";
 import { KpiCard } from "@/components/soc/kpi-card";
+import { NetworkTopology } from "@/components/soc/network-topology";
+import { SecurityPosture } from "@/components/soc/posture-gauge";
 import {
   AwaitingBackend,
   PageHeader,
@@ -162,6 +164,22 @@ function OverviewPage() {
           accent="medium"
         />
       </StatStrip>
+
+      <div className="grid gap-3 xl:grid-cols-3">
+        <Panel
+          title="Network topology"
+          subtitle="Source IP ↔ host attack paths from ingested alerts"
+          className="xl:col-span-2"
+          bodyClassName="px-2 py-2"
+          actions={<SourceBadge source={alertsQuery.data?.source} error={alertsQuery.data?.error} />}
+        >
+          {allAlerts.length ? <NetworkTopology alerts={allAlerts} /> : <AwaitingBackend />}
+        </Panel>
+
+        <Panel title="Security posture" subtitle="Score derived from live incident severity mix">
+          {m ? <SecurityPosture metrics={m} incidents={incidents} /> : <AwaitingBackend />}
+        </Panel>
+      </div>
 
       <div className="grid gap-3 xl:grid-cols-3">
         <Panel
