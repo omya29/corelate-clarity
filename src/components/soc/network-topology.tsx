@@ -183,7 +183,7 @@ export function NetworkTopology({ alerts }: { alerts: WazuhAlert[] }) {
                 strokeWidth={2}
               />
               <text x={hostX + 14} y={y + 3.5} fontSize="10.5" className="fill-[var(--foreground)]" fontFamily="var(--font-mono)">
-                {host}
+                {truncateLabel(host)}
               </text>
               <text x={hostX + 14} y={y + 15} fontSize="9" className="fill-[var(--muted-foreground)]" fontFamily="var(--font-mono)">
                 {hostAlerts.get(host)} alerts
